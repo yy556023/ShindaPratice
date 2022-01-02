@@ -1,0 +1,58 @@
+﻿@using ShindaPratice.Models.Shinda;
+@model ShindaPratice.Models.Shinda.sign;
+
+<div class="row">
+    <div class="col-6 m-2" style="font-size:20px">新達報名</div>
+    <div class="col-6"></div>
+</div>
+
+<div class="row">
+    <div class="col-6" style="height:500px">
+        <form asp-controller="Shinda" asp-action="Index" method="post" id="test">
+            <div class="m-2">手機</div>
+            <div class="m-2">
+                <input type="text" asp-for="phone" />
+                <span asp-validation-for="phone" class="text-danger"></span>
+            </div>
+            <div class="m-2">姓名</div>
+            <div class="m-2">
+                <input type="text" asp-for="name" />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+            <div class="m-2">Email</div>
+            <div class="m-2">
+                <input type="text" asp-for="email" />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
+            <div class="m-2">活動項目</div>
+            @foreach (var item in Model.Event)
+            {
+                <div class="m-2">
+                    <input type="checkbox" asp-for="@item.selected" value="@item.CItemId" />
+                    <label for="Event">@item.CActiveDt @item.CItemName</label>
+                </div>
+            }
+
+            <button type="submit">表單發送</button>
+        </form>
+        <input type="submit" value="傳送" />
+        <button id="x1">測試</button>
+    </div>
+    <div class="col-6"></div>
+</div>
+
+
+<script>
+
+    document.getElementById('x1').addEventListener('click',function(){
+        
+        //var x = document.querySelectorAll('input[type=checkbox]:checked');
+
+
+        var x = document.getElementById('test');
+
+        console.log(x.dataset);
+    })
+
+
+</script>
