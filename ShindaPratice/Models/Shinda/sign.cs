@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ShindaPratice.Models.Shinda
 {
-    public class sign
+    public class Sign
     {
         [Required(ErrorMessage = "請輸入手機")]
         public string phone { get; set; }
@@ -22,5 +22,6 @@ namespace ShindaPratice.Models.Shinda
     {
         [Required(ErrorMessage = "請至少選取一項")]
         public bool selected { get; set; }
+        public string cItem { get; set; }
     }
 }

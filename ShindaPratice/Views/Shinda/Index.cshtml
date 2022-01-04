@@ -1,5 +1,5 @@
 ﻿@using ShindaPratice.Models.Shinda;
-@model ShindaPratice.Models.Shinda.sign;
+@model ShindaPratice.Models.Shinda.Sign;
 
 <div class="row">
     <div class="col-6 m-2" style="font-size:20px">新達報名</div>
@@ -7,52 +7,138 @@
 </div>
 
 <div class="row">
-    <div class="col-6" style="height:500px">
+    <div class="col-6 border-right border-dark" style="height:500px">
         <form asp-controller="Shinda" asp-action="Index" method="post" id="test">
             <div class="m-2">手機</div>
             <div class="m-2">
                 <input type="text" asp-for="phone" />
+                <br />
                 <span asp-validation-for="phone" class="text-danger"></span>
             </div>
             <div class="m-2">姓名</div>
             <div class="m-2">
                 <input type="text" asp-for="name" />
+                <br />
                 <span asp-validation-for="name" class="text-danger"></span>
             </div>
             <div class="m-2">Email</div>
             <div class="m-2">
                 <input type="text" asp-for="email" />
+                <br />
                 <span asp-validation-for="email" class="text-danger"></span>
             </div>
+
             <div class="m-2">活動項目</div>
-            @foreach (var item in Model.Event)
+            @for (int i = 0; i < Model.Event.Count; i++)
             {
-                <div class="m-2">
-                    <input type="checkbox" asp-for="@item.selected" value="@item.CItemId" />
-                    <label for="Event">@item.CActiveDt @item.CItemName</label>
+                <div class="ml-2">
+                    @Html.CheckBoxFor(model => model.Event[i].selected)
+                    @Html.DisplayFor(model => model.Event[i].CActiveDt)@Html.HiddenFor(model => model.Event[i].CActiveDt)
+                    @Html.DisplayFor(model => model.Event[i].CItemName)@Html.HiddenFor(model => model.Event[i].CItemName)
+                    @Html.HiddenFor(model => model.Event[i].CItemId)
                 </div>
             }
 
             <button type="submit">表單發送</button>
+            <button id="x1" style="display:inline-block">測試</button>
         </form>
-        <input type="submit" value="傳送" />
-        <button id="x1">測試</button>
     </div>
-    <div class="col-6"></div>
+    <div class="col-6" style="height:500px">
+        <div class="row mb-4">
+            <div class="col-4">
+                <input type="text" class="form-control" placeholder="手機" />
+            </div>
+            <div class="col-4">
+                <input type="text" class="form-control" placeholder="姓名" />
+            </div>
+            <div class="col-4">
+                <select class="form-control">
+                    <option value="0">全部</option>
+                    @foreach (var item in @ViewBag.Item as List<TblActiveItem>)
+                    {
+                        <option value="@item.CItemId">@item.CItemName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>手機</th>
+                        <th>姓名</th>
+                        <th>信箱</th>
+                        <th>活動項目</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in @ViewBag.ls as List<Signls>)
+                    {
+                        <tr>
+                            <th>@item.phone</th>
+                            <th>@item.name</th>
+                            <th>@item.email</th>
+                            <th>@item.items</th>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
 <script>
 
     document.getElementById('x1').addEventListener('click',function(){
-        
-        //var x = document.querySelectorAll('input[type=checkbox]:checked');
+
+        var x = document.querySelectorAll('input[type=checkbox]:checked');
+
+        if(x.length == 0){
+            //alert('至少需選擇一項');
+            $('.text-danger.ml-2').css('visibility','visible');
+        }
+
+        var form = {
+         phone : $('input[name=phone]').val(),
+         name  : $('input[name=name]').val(),
+         email : $('input[name=email]').val(),
+         //Event : []
+        }
+
+        x.forEach(data =>{
+            //alert(data.value)
+            form.Event.push(data.value)
+        })
+
+        var data = JSON.stringify(form)
+
+        $.ajax({
+            url: "https://localhost:44319/Shinda/Index",
+            method: "POST",
+            data: data ,
+            contentType: 'application/json; charset=utf-8',
+            success:function(res){
+                console.log('true')
+            },
+        })
 
 
-        var x = document.getElementById('test');
-
-        console.log(x.dataset);
+        console.log(form);
     })
+
+
+    var checkbox = document.querySelectorAll('input[type=checkbox]');
+
+        checkbox.forEach(x =>{
+            x.addEventListener('change',function(){
+                if(this.checked){
+                    $('.text-danger.ml-2').css('visibility','hidden');
+                }
+            })
+        });
+
+
 
 
 </script>

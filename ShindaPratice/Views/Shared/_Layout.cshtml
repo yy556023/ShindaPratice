@@ -6,6 +6,14 @@
     <title>ShindaPratice</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    
+            @if(TempData["alert"] != null)
+            {
+                <script>
+                    alert('請至少選擇一項');
+                </script>
+            }
+
 </head>
 <body>
     <header>
