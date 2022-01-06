@@ -27,13 +27,16 @@ namespace ShindaPratice.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("CActiveDt")
+                    b.Property<string>("CActiveDt")
+                        .IsRequired()
                         .HasColumnName("cActiveDt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.Property<string>("CItemName")
                         .HasColumnName("cItemName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
                     b.HasKey("CItemId");
 
@@ -50,22 +53,22 @@ namespace ShindaPratice.Migrations
 
                     b.Property<DateTime>("CCreateDt")
                         .HasColumnName("cCreateDt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("CEmail")
                         .HasColumnName("cEmail")
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("NVARCHAR(50)")
                         .HasMaxLength(50);
 
                     b.Property<string>("CMobile")
                         .HasColumnName("cMobile")
-                        .HasColumnType("varchar(10)")
+                        .HasColumnType("VARCHAR(10)")
                         .HasMaxLength(10)
                         .IsUnicode(false);
 
                     b.Property<string>("CName")
                         .HasColumnName("cName")
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("NVARCHAR(20)")
                         .HasMaxLength(20);
 
                     b.HasKey("CId");
@@ -79,7 +82,7 @@ namespace ShindaPratice.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("cSignupID")
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
                     b.Property<int>("CItemId")
                         .HasColumnName("cItemID")
