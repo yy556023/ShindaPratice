@@ -53,7 +53,7 @@ namespace ShindaPratice
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Shinda}/{action=Index}/{id?}");
             });
         }
     }

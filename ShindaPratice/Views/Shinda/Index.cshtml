@@ -1,14 +1,13 @@
 ﻿@using ShindaPratice.Models.Shinda;
-@model ShindaPratice.Models.Shinda.Sign;
 
 <div class="row">
-    <div class="col-6 m-2" style="font-size:20px">新達報名</div>
+    <div class="col-6 m-2" style="font-size:20px;padding-left:20%">新達報名</div>
     <div class="col-6"></div>
 </div>
 
 <div class="row">
-    <div class="col-6 border-right border-dark" style="height:500px">
-        <form action="Shinda/Index" method="post" id="test">
+    <div class="col-6 border-right border-dark" style="height:500px;padding-left:10%">
+        <div id="test">
             <div class="m-2">手機</div>
             <div class="m-2">
                 <input type="text" name="phone" />
@@ -36,9 +35,9 @@
             <br />
             <button type="submit">表單發送</button>
             <button id="x1" style="display:inline-block">測試</button>
-        </form>
+        </div>
     </div>
-    <div class="col-6" style="height:500px">
+    <div class="col-6 pl-5 pr-5" style="height:500px;">
         <div class="row mb-4">
             <div class="col-4">
                 <input type="text" class="form-control" placeholder="手機" />
@@ -70,7 +69,6 @@
 
 @section Scripts{
 
-
 <script>
     document.getElementById('x1').addEventListener('click',function(){
 
@@ -85,16 +83,17 @@
         Sign.name = document.getElementsByName('name')[0].value;
         Sign.email = document.getElementsByName('email')[0].value;
 
-        var checklist = document.querySelectorAll('input[type=checkbox]');
-        //var checklist = $(':checkbox');
+        var checklist = document.querySelectorAll('input[type=checkbox]:checked');
 
         var i = 0;
 
         var arr = [];
 
-        for(i = 0; i < x.length; i++ ){
-            arr.push(x[i].value);
+        for(i = 0; i < checklist.length; i++ ){
+            arr.push(checklist[i].value);
         }
+
+        //debugger
 
         Sign.items = arr.join(',');
 
@@ -102,13 +101,25 @@
         var data = JSON.stringify(Sign);
 
         var req = new XMLHttpRequest();
-        req.open('POST','https://localhost:44319/Shinda/Index',true);
+        req.open('POST','https://localhost:44319/Shinda/Post',true);
         req.setRequestHeader("Content-type", "application/json");
+        req.setRequestHeader("Accept","json")
+
         req.send(data);
 
-        req.onload(function(){
-            alert('報名已送出');
-        })
+        req.onreadystatechange = function(){
+            if(req.status == 200 && req.readyState == 4){
+                alert('報名已送出');
+
+                var inps = $(':input');
+
+                for (i = 0; i < inps.length; i++){
+                    inps[i].value = '';
+                    inps[i].checked = false;
+                }
+                
+            }
+        }
     })
 </script>
 } 
