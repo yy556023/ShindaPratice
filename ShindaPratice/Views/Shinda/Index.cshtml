@@ -66,15 +66,6 @@
                     </tr>
                 </thead>
                 <tbody id="tbody">
-                    @foreach (var item in @ViewBag.showls as List<Sign>)
-                    {
-                        <tr>
-                            <td>@item.phone</td>
-                            <td>@item.name</td>
-                            <td>@item.email</td>
-                            <td>@item.items</td>
-                        </tr>
-                    }
                 </tbody>
             </table>
         </div>
@@ -85,6 +76,40 @@
 
 <script>
     var res = {};
+
+        window.onload = () =>{
+            //alert('載入完成後 改成用get發送請求拿取資料動態顯示報名名單')
+            var req = new XMLHttpRequest();
+            req.open('GET','https://localhost:44319/Shinda/Get',true);
+            req.setRequestHeader("Content-type", "application/json");
+            req.setRequestHeader("Accept","json");
+
+            req.send();
+
+            req.onreadystatechange = function(){
+                if(req.status == 200 && req.readyState == 4){
+
+                    debugger
+
+                    res = JSON.parse(req.response);
+
+                    if(res.Msg != undefined){
+                        alert(res.Msg);
+                    }
+                    else{
+                        debugger
+
+                        document.getElementById('tbody').innerHTML = '';
+                        //$('#tbody').innerHTML = '';
+
+                        for(i = 0; i < res.length; i++){
+                            $('#tbody').append(`<tr><th>${res[i].phone}</th><th>${res[i].name}</th><th>${res[i].email}</th><th>${res[i].items}</th></tr>`)
+                        }
+                    }
+                }
+            }
+        }
+        
 
         function test(value){
             //alert(value)

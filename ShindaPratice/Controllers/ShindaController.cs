@@ -29,6 +29,11 @@ namespace ShindaPratice.Controllers
 
             ViewBag.list = list;
 
+            return View();
+        }
+
+        public ActionResult Get()
+        {
             var showls = (from o in _context.TblSignup
                           join o2 in _context.TblSignupItem
                           on o.CId equals o2.CSignupId
@@ -55,9 +60,9 @@ namespace ShindaPratice.Controllers
                 item.items = string.Join(',', temp);
             }
 
-            ViewBag.showls = showls;
+            var res = JsonConvert.SerializeObject(showls);
 
-            return View();
+            return Ok(res);
         }
 
         [HttpPost]
