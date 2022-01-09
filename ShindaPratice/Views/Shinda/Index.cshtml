@@ -10,17 +10,17 @@
         <div id="test">
             <div class="m-2">手機</div>
             <div class="m-2">
-                <input type="text" name="phone" />
+                <input type="text" class="form-control w-50" name="phone" />
                 <br />
             </div>
             <div class="m-2">姓名</div>
             <div class="m-2">
-                <input type="text" name="name" />
+                <input type="text" class="form-control w-50" name="name" />
                 <br />
             </div>
             <div class="m-2">Email</div>
             <div class="m-2">
-                <input type="text" name="email" />
+                <input type="text" class="form-control w-50" name="email" />
                 <br />
             </div>
 
@@ -34,19 +34,24 @@
             }
             <br />
             <button type="submit">表單發送</button>
-            <button id="x1" style="display:inline-block">測試</button>
+            <button id="x1" onclick="submit()" style="display:inline-block">測試</button>
         </div>
     </div>
     <div class="col-6 pl-5 pr-5" style="height:500px;">
         <div class="row mb-4">
             <div class="col-4">
-                <input type="text" class="form-control" placeholder="手機" />
+                <input type="text" class="form-control w-50" placeholder="手機" />
             </div>
             <div class="col-4">
-                <input type="text" class="form-control" placeholder="姓名" />
+                <input type="text" class="form-control w-50" placeholder="姓名" />
             </div>
             <div class="col-4">
-                <select class="form-control">
+                <select class="form-control w-50">
+                    <option value="0">請選擇...</option>
+                    @foreach (var item in @ViewBag.list as List<TblActiveItem>)
+                    {
+                        <option value="@item.CItemId">@item.CItemName</option>
+                    }
                 </select>
             </div>
         </div>
@@ -60,7 +65,7 @@
                         <th>活動項目</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                 </tbody>
             </table>
         </div>
@@ -70,56 +75,78 @@
 @section Scripts{
 
 <script>
-    document.getElementById('x1').addEventListener('click',function(){
 
-        var Sign = {
-            phone:'',
-            name:'',
-            email:'',
-            items:''
-        };
+        function submit(){
+    var Sign = {
+                phone:'',
+                name:'',
+                email:'',
+                items:''
+            };
 
-        Sign.phone = document.getElementsByName('phone')[0].value;
-        Sign.name = document.getElementsByName('name')[0].value;
-        Sign.email = document.getElementsByName('email')[0].value;
+            Sign.phone = document.getElementsByName('phone')[0].value;
+            Sign.name = document.getElementsByName('name')[0].value;
+            Sign.email = document.getElementsByName('email')[0].value;
 
-        var checklist = document.querySelectorAll('input[type=checkbox]:checked');
+            var checklist = document.querySelectorAll('input[type=checkbox]:checked');
 
-        var i = 0;
+            var i = 0;
 
-        var arr = [];
+            var arr = [];
 
-        for(i = 0; i < checklist.length; i++ ){
-            arr.push(checklist[i].value);
-        }
+            for(i = 0; i < checklist.length; i++ ){
+                arr.push(checklist[i].value);
+            }
 
-        //debugger
+            //debugger
 
-        Sign.items = arr.join(',');
+            Sign.items = arr.join(',');
 
+            debugger
+            var data = JSON.stringify(Sign);
 
-        var data = JSON.stringify(Sign);
+            var req = new XMLHttpRequest();
+            req.open('POST','https://localhost:44319/Shinda/Post',true);
+            req.setRequestHeader("Content-type", "application/json");
+            req.setRequestHeader("Accept","json");
 
-        var req = new XMLHttpRequest();
-        req.open('POST','https://localhost:44319/Shinda/Post',true);
-        req.setRequestHeader("Content-type", "application/json");
-        req.setRequestHeader("Accept","json")
+            req.send(data);
 
-        req.send(data);
+            req.onreadystatechange = function(){
+                if(req.status == 200 && req.readyState == 4){
 
-        req.onreadystatechange = function(){
-            if(req.status == 200 && req.readyState == 4){
-                alert('報名已送出');
+                    debugger
 
-                var inps = $(':input');
+                    var res = JSON.parse(req.response);
 
-                for (i = 0; i < inps.length; i++){
-                    inps[i].value = '';
-                    inps[i].checked = false;
+                    if(res.Msg != undefined){
+                        alert(res.Msg);
+                    }
+                    else{
+                        alert('報名已送出');
+
+                        var inps = $(':input');
+
+                        for (i = 0; i < inps.length - 1; i++){
+                            if(inps[i].type == 'text'){
+                                inps[i].value = '';
+                            }
+                            else if (inps[i].type == 'checkbox'){
+                                inps[i].checked = false;
+                            }
+                        }
+
+                        debugger
+
+                        document.getElementById('tbody').innerHTML = '';
+
+                        for(i = 0; i < res.length; i++){
+                            $('#tbody').append(`<tr><th>${res[i].phone}</th><th>${res[i].name}</th><th>${res[i].email}</th><th>${res[i].items}</th></tr>`)
+                        }
+                    }
                 }
-                
             }
         }
-    })
+
 </script>
-} 
+}
