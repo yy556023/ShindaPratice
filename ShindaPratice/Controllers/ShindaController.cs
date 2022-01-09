@@ -29,6 +29,34 @@ namespace ShindaPratice.Controllers
 
             ViewBag.list = list;
 
+            var showls = (from o in _context.TblSignup
+                          join o2 in _context.TblSignupItem
+                          on o.CId equals o2.CSignupId
+                          join o3 in _context.TblActiveItem
+                          on o2.CItemId equals o3.CItemId
+                          group o3 by new { o.CId, o2.CSignupId, o.CName, o.CEmail, o.CMobile } into g
+                          select new Sign()
+                          {
+                              Id = g.Key.CId,
+                              name = g.Key.CName,
+                              phone = g.Key.CMobile,
+                              email = g.Key.CEmail,
+                              items = ""
+                          }).ToList();
+
+            foreach (var item in showls)
+            {
+                var temp = (from o2 in _context.TblSignupItem
+                            join o3 in _context.TblActiveItem
+                            on o2.CItemId equals o3.CItemId
+                            where o2.CSignupId == item.Id
+                            select o3.CItemName).ToList();
+
+                item.items = string.Join(',', temp);
+            }
+
+            ViewBag.showls = showls;
+
             return View();
         }
 

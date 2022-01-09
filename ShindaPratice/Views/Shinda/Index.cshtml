@@ -40,7 +40,7 @@
     <div class="col-6 pl-5 pr-5" style="height:500px;">
         <div class="row mb-4">
             <div class="col-4">
-                <input type="text" class="form-control w-50" placeholder="手機" />
+                <input type="text" onkeyup="test(event.target.value)" class="form-control w-50" placeholder="手機" />
             </div>
             <div class="col-4">
                 <input type="text" class="form-control w-50" placeholder="姓名" />
@@ -66,6 +66,15 @@
                     </tr>
                 </thead>
                 <tbody id="tbody">
+                    @foreach (var item in @ViewBag.showls as List<Sign>)
+                    {
+                        <tr>
+                            <td>@item.phone</td>
+                            <td>@item.name</td>
+                            <td>@item.email</td>
+                            <td>@item.items</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -75,9 +84,22 @@
 @section Scripts{
 
 <script>
+    var res = {};
+
+        function test(value){
+            //alert(value)
+            debugger
+            document.getElementById('tbody').innerHTML = '';
+
+            for(i = 0; i < res.length; i++){
+                if(res[i].phone.indexOf(value) != -1){
+                    $('#tbody').append(`<tr><th>${res[i].phone}</th><th>${res[i].name}</th><th>${res[i].email}</th><th>${res[i].items}</th></tr>`)
+                }
+            }
+        }
 
         function submit(){
-    var Sign = {
+            var Sign = {
                 phone:'',
                 name:'',
                 email:'',
@@ -117,7 +139,7 @@
 
                     debugger
 
-                    var res = JSON.parse(req.response);
+                    res = JSON.parse(req.response);
 
                     if(res.Msg != undefined){
                         alert(res.Msg);
@@ -139,6 +161,7 @@
                         debugger
 
                         document.getElementById('tbody').innerHTML = '';
+                        //$('#tbody').innerHTML = '';
 
                         for(i = 0; i < res.length; i++){
                             $('#tbody').append(`<tr><th>${res[i].phone}</th><th>${res[i].name}</th><th>${res[i].email}</th><th>${res[i].items}</th></tr>`)
