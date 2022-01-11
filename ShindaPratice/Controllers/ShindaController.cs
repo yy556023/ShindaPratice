@@ -157,7 +157,7 @@ namespace ShindaPratice.Controllers
                     item.items = string.Join(',', temp);
                 }
 
-                ViewBag.show = showls.OrderByDescending(x => x.Id).ToList();
+                showls = showls.OrderByDescending(x => x.Id).ToList();
 
                 var s = JsonConvert.SerializeObject(showls, Formatting.None);
 

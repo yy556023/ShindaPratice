@@ -99,8 +99,9 @@
                     else{
                         debugger
 
-                        document.getElementById('tbody').innerHTML = '';
-                        //$('#tbody').innerHTML = '';
+                        //document.getElementById('tbody').innerHTML = '';
+                        //$('#tbody').html('');
+                        $('#tbody').empty();
 
                         for(i = 0; i < res.length; i++){
                             $('#tbody').append(`<tr><th>${res[i].phone}</th><th>${res[i].name}</th><th>${res[i].email}</th><th>${res[i].items}</th></tr>`)
